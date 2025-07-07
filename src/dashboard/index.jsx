@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import AddResume from './components/AddResume'
 import { useUser } from '@clerk/clerk-react'
 import GlobalApi from '../../services/GlobalApi';
-import ResumeCardItem from './components/ResumeCarditem';
+import ResumeCardItem from './components/ResumeCardItem';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
