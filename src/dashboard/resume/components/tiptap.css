@@ -1,0 +1,28 @@
+
+.ProseMirror:focus {
+  outline: none;
+}
+.editor-wrapper {
+  border: 1px solid #ccc;
+  padding: 10px;
+  min-height: 150px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.btn {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-active {
+  padding: 4px 8px;
+  border: 1px solid #000;
+  background: #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
