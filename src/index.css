@@ -26,10 +26,11 @@
     box-shadow: none;
   }
 }
-@page{
-  size:auto;
-  margin: 0mm;
+@page {
+  size: A4;
+  margin: 0;
 }
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
