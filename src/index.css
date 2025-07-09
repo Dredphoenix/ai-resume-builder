@@ -2,15 +2,24 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-@media print{
-
-  #no-print{
-    display: none;
+@media print {
+  body, html, #root {
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none;
   }
-  #print-area{
-    display: block;
+  @page {
+    margin: 0;
+    size: A4;
+  }
+  #print-area {
+    width: 100vw;
+    height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
     page-break-inside: avoid;
   }
+  
   #print-area * {
   page-break-inside: avoid;
   page-break-before: auto;
@@ -21,10 +30,6 @@
     padding: 0;
     box-shadow: none;
   }
-}
-@page {
-  size: A4;
-  margin: 0;
 }
 
 
