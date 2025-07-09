@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Navigate, Outlet } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/next"
 import {
   SignedIn,
   SignedOut,
