@@ -9,7 +9,11 @@
   }
   #print-area{
     display: block;
-       page-break-inside: avoid;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    page-break-inside: avoid;
   }
   #print-area * {
   page-break-inside: avoid;
