@@ -5,6 +5,7 @@ import SummaryPreview from "./preview/SummaryPreview";
 import ExperiencePreview from "./preview/ExperiencePreview";
 import EducationalPreview from "./preview/EducationalPreview";
 import SkillPreview from "./preview/SkillPreview";
+import AnalysisModal from "./analysis/AnalysisModal";
 
 function ResumePreview() {
     
@@ -16,6 +17,9 @@ function ResumePreview() {
         borderColor:resumeInfo?.themeColor
       }}
     >
+      <div className="flex justify-end">
+        <AnalysisModal />
+      </div>
       {/* Personal Details */}
       <PersonalDetailPreview resumeInfo={resumeInfo} />
       {/* Summary */}
