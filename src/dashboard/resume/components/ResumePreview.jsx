@@ -9,17 +9,23 @@ import AnalysisModal from "./analysis/AnalysisModal";
 
 function ResumePreview() {
     
-     const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext);
+     const {resumeInfo}=useContext(ResumeInfoContext);
   return (
     
-    <div className="shadow-lg h-full p-14 border-t-[20px]"
+    <div 
       style={{
-        borderColor:resumeInfo?.themeColor
+        background: "white",
+        borderColor: resumeInfo?.themeColor,
+        borderTop: "4px solid",
+        padding: "12mm 14mm",
+        margin: 0,
+        width: "100%",
+        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+        fontSize: "11px",
+        fontFamily: "'Segoe UI', 'Open Sans', Tahoma, sans-serif"
       }}
+      className="@media print { box-shadow: none; padding: 10mm; margin: 0; }"
     >
-      {/* <div className="flex justify-end">
-        <AnalysisModal />
-      </div> */}
       {/* Personal Details */}
       <PersonalDetailPreview resumeInfo={resumeInfo} />
       {/* Summary */}

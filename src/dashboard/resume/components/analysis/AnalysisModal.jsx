@@ -16,17 +16,59 @@ import { analyzeSkillGap, computeATSScore } from "../../../../../services/AiMode
 function buildResumeText(resumeInfo) {
   if (!resumeInfo) return "";
   const parts = [];
-  if (resumeInfo?.personal) parts.push(JSON.stringify(resumeInfo.personal));
+
+  // Personal Details
+  if (resumeInfo?.firstName || resumeInfo?.lastName) {
+    parts.push(`${resumeInfo?.firstName || ""} ${resumeInfo?.lastName || ""}`.trim());
+  }
+  if (resumeInfo?.jobTitle) parts.push(resumeInfo?.jobTitle);
+  if (resumeInfo?.email) parts.push(resumeInfo?.email);
+  if (resumeInfo?.phone) parts.push(resumeInfo?.phone);
+  if (resumeInfo?.address) parts.push(resumeInfo?.address);
+
+  // Professional Summary
   if (resumeInfo?.summary) parts.push(String(resumeInfo.summary));
+
+  // Professional Experience - FIXED FIELD NAMES
   if (Array.isArray(resumeInfo?.experience)) {
     resumeInfo.experience.forEach((e) => {
-      parts.push(`${e.title || ""} ${e.company || ""} ${e.description || ""}`);
+      const exp = [
+        e.title || "",
+        e.companyName || "",
+        e.city || "",
+        e.state || "",
+        e.startDate || "",
+        e.endDate || "",
+        e.workSummary || ""
+      ].filter(Boolean).join(" ");
+      if (exp) parts.push(exp);
     });
   }
+
+  // Education - FIXED FIELD NAMES
   if (Array.isArray(resumeInfo?.education)) {
-    resumeInfo.education.forEach((ed) => parts.push(`${ed.degree || ""} ${ed.institution || ""}`));
+    resumeInfo.education.forEach((ed) => {
+      const edu = [
+        ed.universityName || "",
+        ed.degree || "",
+        ed.major || "",
+        ed.startDate || "",
+        ed.endDate || "",
+        ed.description || ""
+      ].filter(Boolean).join(" ");
+      if (edu) parts.push(edu);
+    });
   }
-  if (Array.isArray(resumeInfo?.skills)) parts.push(resumeInfo.skills.join(", "));
+
+  // Skills - FIXED FIELD NAME (capital S)
+  if (Array.isArray(resumeInfo?.Skills)) {
+    const skillNames = resumeInfo?.Skills
+      .map((s) => s?.name)
+      .filter(Boolean)
+      .join(", ");
+    if (skillNames) parts.push(skillNames);
+  }
+
   return parts.join("\n\n");
 }
 

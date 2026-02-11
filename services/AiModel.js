@@ -153,3 +153,41 @@ export async function computeATSScore(resumeText) {
   }
 }
 
+// Generate a professional work experience summary using AI with strong action verbs.
+// Returns a string summary or an error object. The summary is designed to maximize
+// ATS keyword match and convey impact using strong, measurable language.
+export async function generateExperienceSummary(positionTitle, companyName, startDate, endDate) {
+  const PROMPT = `You are an expert resume writer specializing in ATS optimization and impact-driven narratives.
+
+Task: Generate a professional work experience summary for this role:
+- Position: ${positionTitle}
+- Company: ${companyName}
+- Duration: ${startDate} to ${endDate}
+
+Requirements:
+1) Start with 2-3 strong action verbs (Led, Implemented, Developed, Optimized, Managed, Designed, Transformed, Enhanced, Delivered, Accelerated, etc.)
+2) Include measurable outcomes and impact (e.g., "increased by X%", "reduced by Y%", "delivered Z value")
+3) Use industry-specific keywords relevant to the role
+4) Keep it concise (2-3 bullet points, max 150 words total)
+5) Make it ATS-friendly: avoid special characters, tables, graphics
+6) Focus on results and achievements, not just responsibilities
+
+Return ONLY a plain text summary with bullet points (using - prefix), no JSON, no markdown formatting:
+- [Bullet 1 with action verb and measurable result]
+- [Bullet 2 with action verb and measurable result]
+- [Bullet 3 with action verb and key achievement]`;
+
+  try {
+    const result = await AIChatSession.sendMessage(PROMPT);
+    let rawText = "";
+    if (result?.response?.text) rawText = await result.response.text();
+    else if (typeof result === "string") rawText = result;
+    else rawText = JSON.stringify(result);
+
+    return rawText.trim();
+  } catch (err) {
+    console.error("generateExperienceSummary error:", err);
+    return { error: err?.message || String(err) };
+  }
+}
+

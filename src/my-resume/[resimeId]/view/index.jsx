@@ -23,9 +23,68 @@ function ViewResume() {
         })
     }
     
-       const HandleDownload=()=>{
-            window.print()
-       }
+    const HandleDownload=()=>{
+        // Add print styles dynamically
+        const printStyles = `
+            @page {
+                size: A4;
+                margin: 0;
+                padding: 0;
+            }
+            
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            
+            #no-print {
+                display: none;
+            }
+            
+            #print-area {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            
+            #print-area div {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .shadow-lg {
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 10mm !important;
+                width: 100%;
+                background: white;
+            }
+            
+            html, body {
+                width: 100%;
+                height: 100%;
+            }
+        `;
+        
+        const style = document.createElement('style');
+        style.textContent = printStyles;
+        document.head.appendChild(style);
+        
+        setTimeout(() => {
+            window.print();
+            document.head.removeChild(style);
+        }, 100);
+    }
 
   return (
     <ResumeInfoContext.Provider value={{resumeInfo,setResumeInfo}}>
@@ -52,8 +111,8 @@ function ViewResume() {
         </div>
         </div>
        </div>
-       <div className='my-10 mx-10 md:mx-20 lg:mx-36'>
-        <div id="print-area">
+       <div style={{ margin: 0, padding: 0 }}>
+        <div id="print-area" style={{ margin: 0, padding: 0, width: "100%", minHeight: "100vh", background: "white" }}>
             <ResumePreview/>
         </div>
        </div>

@@ -42,7 +42,7 @@ function Summary({ enabledNext }) {
     setLoading(true);
 
     const PROMPT = `
-You are a professional resume writer.
+You are a professional ATS resume writer.
 
 Job Title: ${resumeInfo?.jobTitle || "Software Developer"}
 

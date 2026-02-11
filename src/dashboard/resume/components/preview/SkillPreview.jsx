@@ -2,38 +2,17 @@ import React from 'react'
 
 function SkillPreview({resumeInfo}) {
   return (
-   <div className="my-6">
-      <h2
-        className="text-center font-bold text-sm mb-2"
-        style={{
-          color: resumeInfo?.themeColor,
-        }}
-      >
-       Skills
-      </h2>
-      <hr
-        style={{
-          borderColor: resumeInfo?.themeColor,
-        }}
-      />
-      <div className='grid grid-cols-2 gap-3 my-4'>
-       {resumeInfo?.Skills?.map((skill,index)=>(
-        <div key={index} className='flex items-center justify-between'>
-         <h2 className='text-xs'>{skill?.name}</h2>
-       <div className="h-2 bg-gray-200 w-[120px] overflow-hidden rounded">
-  <div
-    className="h-2 rounded"
-    style={{
-      backgroundColor: resumeInfo?.themeColor || '#000',
-      width: `${Math.min(skill?.rating, 5) * 20}%`
-    }}
-  ></div>
-</div>
-
-        </div>
-       ))}
-      </div>
-      </div>
+    <div style={{ marginBottom: "0" }}>
+      {Array.isArray(resumeInfo?.Skills) && resumeInfo?.Skills.length > 0 ? (
+        <>
+          <p style={{ fontSize: "11pt", fontWeight: "bold", margin: "0 0 6pt 0", lineHeight: "1.2", textTransform: "uppercase", letterSpacing: "0.5px" }}>SKILLS</p>
+          <hr style={{ margin: "0 0 8pt 0", padding: 0, border: "none", height: "0.5px", backgroundColor: "#ddd" }} />
+          <p style={{ fontSize: "10pt", lineHeight: "1.6", margin: "0", color: "#333" }}>
+            {resumeInfo?.Skills?.map((skill) => skill?.name).filter(Boolean).join(" | ")}
+          </p>
+        </>
+      ) : null}
+    </div>
   )
 }
 

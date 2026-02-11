@@ -4,14 +4,16 @@ import { Button } from "@/components/ui/button";
 import TiptapEditor from "../TipTapEditor";
 import { CandyOff, LoaderCircle } from "lucide-react";
 import { ResumeInfoContext } from "../../../../context/ResumeInfoContext";
-import dummy from "../../../../data/dummy";
+// import dummy from "../../../../data/dummy";
 import { Loader } from 'lucide-react';
 import GlobalApi from "../../../../../services/GlobalApi";
+import { generateExperienceSummary } from "../../../../../services/AiModel";
 import { toast } from "sonner";
 import { useParams } from "react-router-dom";
 
 function Experience({enabledNext}) {
   const [loading,setLoading]=useState(false);
+  const [aiGeneratingIndex, setAiGeneratingIndex] = useState(null);
   const params = useParams();
   const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext);
 
@@ -70,6 +72,39 @@ function Experience({enabledNext}) {
       setExperienceList((experienceList) => experienceList.slice(0, -1));
     }
   };
+
+  const GenerateExperienceSummary = async (index) => {
+    const experience = experienceList[index];
+    if (!experience.title || !experience.companyName) {
+      toast.error("Please enter Position Title and Company Name first");
+      return;
+    }
+
+    setAiGeneratingIndex(index);
+    try {
+      const summary = await generateExperienceSummary(
+        experience.title,
+        experience.companyName,
+        experience.startDate,
+        experience.endDate
+      );
+
+      if (summary && typeof summary === 'string') {
+        const newEntries = [...experienceList];
+        newEntries[index].workSummary = summary;
+        setExperienceList(newEntries);
+        toast.success("Experience summary generated!");
+      } else if (summary?.error) {
+        toast.error("Failed to generate summary: " + summary.error);
+      }
+    } catch (error) {
+      console.error("AI generation error:", error);
+      toast.error("Error generating summary. Please try again.");
+    } finally {
+      setAiGeneratingIndex(null);
+    }
+  };
+
 const onSave = async (e) => {
   e.preventDefault();
   setLoading(true);
@@ -166,6 +201,26 @@ const onSave = async (e) => {
                     />
                   </div>
                   <div className="col-span-2">
+                    <label className="text-xs">Work Summary (Description)</label>
+                    <div className="flex gap-2 mb-2">
+                      <Button 
+                        type="button"
+                        variant="outline" 
+                        size="sm"
+                        className="text-primary"
+                        onClick={() => GenerateExperienceSummary(index)}
+                        disabled={aiGeneratingIndex === index}
+                      >
+                        {aiGeneratingIndex === index ? (
+                          <>
+                            <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          "✨ Generate from AI"
+                        )}
+                      </Button>
+                    </div>
                     <TiptapEditor
                       index={index}
                       content={item?.workSummary || ""}
