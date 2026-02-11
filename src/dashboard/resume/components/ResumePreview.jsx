@@ -17,9 +17,9 @@ function ResumePreview() {
         borderColor:resumeInfo?.themeColor
       }}
     >
-      <div className="flex justify-end">
+      {/* <div className="flex justify-end">
         <AnalysisModal />
-      </div>
+      </div> */}
       {/* Personal Details */}
       <PersonalDetailPreview resumeInfo={resumeInfo} />
       {/* Summary */}

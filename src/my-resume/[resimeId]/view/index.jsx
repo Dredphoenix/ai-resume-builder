@@ -6,6 +6,7 @@ import { ResumeInfoContext } from '../../../context/ResumeInfoContext'
 import { useParams } from 'react-router-dom'
 import GlobalApi from '../../../../services/GlobalApi'
 import { RWebShare } from 'react-web-share'
+import AnalysisModal from '../../../dashboard/resume/components/analysis/AnalysisModal'
 
 function ViewResume() {
     const [resumeInfo,setResumeInfo]=useState();
@@ -35,7 +36,9 @@ function ViewResume() {
         <p className='text-center text-gray-400'>Now you are ready to download your resume and you can share your resume url with anyone</p>
         <div className='flex justify-between px-44 my-10'>
             <Button onClick={HandleDownload}>Download</Button>
-
+<div className="flex justify-end">
+        <AnalysisModal />
+      </div>
             <RWebShare
         data={{
           text: "Hi everyone ,This is my resume please click the url to see it.",
