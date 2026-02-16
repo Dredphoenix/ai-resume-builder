@@ -41,11 +41,11 @@ function Home() {
   const navigate = useNavigate();
 
   const stats = [
-    { number: "50K+", label: "Resumes Created" },
-    { number: "95%", label: "Success Rate" },
-    { number: "500+", label: "Companies Trust Us" },
-    { number: "4.9", label: "Average Rating" }
-  ];
+  { number: "1K+", label: "Resumes Generated" },
+  { number: "98%", label: "ATS Parsing Accuracy" },
+  { number: "12+", label: "ATS-Optimized Templates" },
+   { number: "100%", label: "Keyword Optimized Templates" }
+];
 
 
 
@@ -264,7 +264,7 @@ function Home() {
                   AI-powered resume builder helping professionals land their dream jobs.
                 </p>
                 <div className="border-t border-gray-800 pt-8 text-gray-400 px-4 sm:px-0">
-                  <p>&copy; 2025 ResMancer. All rights reserved.</p>
+                  <p>&copy; 2026 ResMancer. All rights reserved.</p>
                 </div>
               </div>
             </footer>
