@@ -6,6 +6,8 @@ import SignInPage from './auth/sign-in/index.jsx'
 import { Link } from 'react-router-dom';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Home from './home/index.jsx'
+import SkillGapAnalyzer from './features/SkillGapAnalyzer.jsx'
+import ATSChecker from './features/ATSChecker.jsx'
 import Dashboard from './dashboard/index.jsx'
 import { ClerkProvider } from '@clerk/clerk-react'
 import EditResume from './dashboard/resume/[resumeId]/edit/index.jsx'
@@ -33,6 +35,14 @@ const router =createBrowserRouter([
   {
       path:'/home',
       element:<Home/>
+  },
+  {
+    path:'/tools/skill-gap',
+    element:<SkillGapAnalyzer />
+  },
+  {
+    path:'/tools/ats-checker',
+    element:<ATSChecker />
   },
     {
       path:'/',

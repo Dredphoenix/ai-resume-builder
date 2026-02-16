@@ -5,15 +5,13 @@ import TiptapEditor from "../TipTapEditor";
 import { CandyOff, LoaderCircle } from "lucide-react";
 import { ResumeInfoContext } from "../../../../context/ResumeInfoContext";
 // import dummy from "../../../../data/dummy";
-import { Loader } from 'lucide-react';
 import GlobalApi from "../../../../../services/GlobalApi";
-import { generateExperienceSummary } from "../../../../../services/AiModel";
 import { toast } from "sonner";
 import { useParams } from "react-router-dom";
 
 function Experience({enabledNext}) {
   const [loading,setLoading]=useState(false);
-  const [aiGeneratingIndex, setAiGeneratingIndex] = useState(null);
+  
   const params = useParams();
   const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext);
 
@@ -73,37 +71,7 @@ function Experience({enabledNext}) {
     }
   };
 
-  const GenerateExperienceSummary = async (index) => {
-    const experience = experienceList[index];
-    if (!experience.title || !experience.companyName) {
-      toast.error("Please enter Position Title and Company Name first");
-      return;
-    }
-
-    setAiGeneratingIndex(index);
-    try {
-      const summary = await generateExperienceSummary(
-        experience.title,
-        experience.companyName,
-        experience.startDate,
-        experience.endDate
-      );
-
-      if (summary && typeof summary === 'string') {
-        const newEntries = [...experienceList];
-        newEntries[index].workSummary = summary;
-        setExperienceList(newEntries);
-        toast.success("Experience summary generated!");
-      } else if (summary?.error) {
-        toast.error("Failed to generate summary: " + summary.error);
-      }
-    } catch (error) {
-      console.error("AI generation error:", error);
-      toast.error("Error generating summary. Please try again.");
-    } finally {
-      setAiGeneratingIndex(null);
-    }
-  };
+  
 
 const onSave = async (e) => {
   e.preventDefault();
@@ -142,14 +110,14 @@ const onSave = async (e) => {
 
   return (
     <div>
-      <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-4">
+      <div className="p-5 sm:p-6 shadow-lg rounded-lg border-t-primary border-t-4 mt-4">
         <h2 className="font-bold text-lg">Experience Detail</h2>
         <p>Add your work experience information</p>
         <form className="mt-7" onSubmit={onSave}>
           <div>      
             {experienceList.map((item, index) => (
               <div key={index}>
-                <div className="grid grid-cols-2 gap-3 border p-3 my-5 rounded-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 border p-3 my-5 rounded-lg">
                   <div>
                     <label className="text-xs">Position Title</label>
                     <Input
@@ -200,27 +168,8 @@ const onSave = async (e) => {
                       onChange={(event) => handleChange(index, event)}
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div className="col-span-1 sm:col-span-2">
                     <label className="text-xs">Work Summary (Description)</label>
-                    <div className="flex gap-2 mb-2">
-                      <Button 
-                        type="button"
-                        variant="outline" 
-                        size="sm"
-                        className="text-primary"
-                        onClick={() => GenerateExperienceSummary(index)}
-                        disabled={aiGeneratingIndex === index}
-                      >
-                        {aiGeneratingIndex === index ? (
-                          <>
-                            <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
-                            Generating...
-                          </>
-                        ) : (
-                          "✨ Generate from AI"
-                        )}
-                      </Button>
-                    </div>
                     <TiptapEditor
                       index={index}
                       content={item?.workSummary || ""}
@@ -231,12 +180,12 @@ const onSave = async (e) => {
               </div>
             ))}
           </div>
-          <div className="flex justify-between">
-            <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row justify-between gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <Button 
                 type="button"
                 variant="outline" 
-                className="text-primary" 
+                className="text-primary w-full sm:w-auto" 
                 onClick={AddNewExperience}
               >
                 + Add More Experience
@@ -244,16 +193,18 @@ const onSave = async (e) => {
               <Button 
                 type="button"
                 variant="outline" 
-                className="text-primary" 
+                className="text-primary w-full sm:w-auto" 
                 onClick={RemoveExperience}
                 disabled={experienceList.length <= 1}
               >
                 - Remove
               </Button>
             </div>
-            <Button type="submit" disabled={loading}>
-              {loading ? <LoaderCircle className="animate-spin" /> : "Save"}
-            </Button>
+            <div className="w-full sm:w-auto">
+              <Button type="submit" disabled={loading} className="w-full sm:w-auto">
+                {loading ? <LoaderCircle className="animate-spin" /> : "Save"}
+              </Button>
+            </div>
           </div>
         </form>
       </div>

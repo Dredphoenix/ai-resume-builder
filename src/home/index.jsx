@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { UserButton, useUser } from '@clerk/clerk-react';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/custom/Header';
 import { 
   CheckCircle, 
@@ -37,6 +38,8 @@ function Home() {
     }
   ];
 
+  const navigate = useNavigate();
+
   const stats = [
     { number: "50K+", label: "Resumes Created" },
     { number: "95%", label: "Success Rate" },
@@ -52,22 +55,22 @@ function Home() {
             <Header />
             
             {/* Hero Section */}
-            <div className="mt-20 flex flex-col items-center justify-center text-center px-4">
+              <div className="mt-20 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8">
               <div className="flex items-center mb-4 bg-primary/10 px-4 py-2 rounded-full">
                 <Sparkles className="w-4 h-4 text-primary mr-2" />
                 <span className="text-sm font-medium text-primary">AI-Powered Resume Builder</span>
               </div>
               
-              <h1 className="font-extrabold text-6xl sm:text-7xl mb-4 tracking-tight">
+              <h1 className="font-extrabold text-4xl sm:text-6xl md:text-7xl mb-4 tracking-tight">
                 Res
                 <span className="text-primary drop-shadow-lg animate-pulse">Mancer</span>
               </h1>
               
-              <h2 className="font-semibold text-3xl sm:text-5xl text-gray-700 mb-6">
+              <h2 className="font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-700 mb-6">
                 Build Your Resume <span className="text-primary">With AI</span>
               </h2>
               
-              <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mb-8">
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mb-8 px-2 sm:px-0">
                 Create stunning, ATS-friendly resumes in seconds. Let AI craft your professional story 
                 and land your dream job faster than ever before.
               </p>
@@ -75,7 +78,7 @@ function Home() {
               <div className="flex flex-col sm:flex-row gap-4 mb-12">
                 {isSignedIn ? (
                   <Link to="/dashboard">
-                    <Button className="px-10 py-6 text-xl rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <Button className="px-6 py-3 sm:px-10 sm:py-6 text-lg sm:text-xl rounded-lg shadow-lg hover:shadow-xl transition-shadow">
                       Create Resume
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
@@ -83,7 +86,7 @@ function Home() {
                 ) : (
                   <>
                     <Link to="/auth/sign-in">
-                      <Button className="px-10 py-6 text-xl rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                      <Button className="px-6 py-3 sm:px-10 sm:py-6 text-lg sm:text-xl rounded-lg shadow-lg hover:shadow-xl transition-shadow">
                         Get Started Free
                         <ArrowRight className="ml-2 w-5 h-5" />
                       </Button>
@@ -104,12 +107,12 @@ function Home() {
             </div>
 
             {/* Stats Section */}
-            <div className="bg-white/50 backdrop-blur-sm py-16 px-4">
+                <div className="bg-white/50 backdrop-blur-sm py-12 md:py-16 px-4 sm:px-6">
               <div className="max-w-6xl mx-auto">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
                   {stats.map((stat, index) => (
                     <div key={index} className="text-center">
-                      <div className="text-3xl sm:text-4xl font-bold text-primary mb-2">
+                      <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">
                         {stat.number}
                       </div>
                       <div className="text-gray-600 font-medium">{stat.label}</div>
@@ -120,7 +123,7 @@ function Home() {
             </div>
 
             {/* Features Section */}
-            <div className="py-20 px-4">
+                <div className="py-16 md:py-20 px-4 sm:px-6">
               <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
                   <h3 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
@@ -132,9 +135,9 @@ function Home() {
                   </p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
                   {features.map((feature, index) => (
-                    <div key={index} className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div key={index} className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow">
                       <div className="flex items-center mb-4">
                         {feature.icon}
                         <h4 className="text-xl font-semibold text-gray-800 ml-3">
@@ -147,11 +150,29 @@ function Home() {
                     </div>
                   ))}
                 </div>
+                {/* Extra Tools */}
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow cursor-pointer" onClick={()=>navigate('/tools/skill-gap')}>
+                    <div className="flex items-center mb-3">
+                      <Zap className="w-8 h-8 text-primary" />
+                      <h4 className="text-lg font-semibold text-gray-800 ml-3">Skill Gap Analyzer</h4>
+                    </div>
+                    <p className="text-gray-600">Compare your resume skills against a job description and get a match percentage and recommendations.</p>
+                  </div>
+
+                  <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow cursor-pointer mt-4 md:mt-0" onClick={()=>navigate('/tools/ats-checker')}>
+                    <div className="flex items-center mb-3">
+                      <FileText className="w-8 h-8 text-primary" />
+                      <h4 className="text-lg font-semibold text-gray-800 ml-3">ATS Checker</h4>
+                    </div>
+                    <p className="text-gray-600">Run a quick ATS compatibility check on your resume and receive a score with actionable suggestions.</p>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* How It Works Section */}
-            <div className="bg-gradient-to-r from-primary/10 to-primary/5 py-20 px-4">
+            <div className="bg-gradient-to-r from-primary/10 to-primary/5 py-16 md:py-20 px-4 sm:px-6">
               <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
                   <h3 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
@@ -162,10 +183,10 @@ function Home() {
                   </p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                      <span className="text-2xl font-bold text-white">1</span>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                  <div className="text-center px-6">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                      <span className="text-xl sm:text-2xl font-bold text-white">1</span>
                     </div>
                     <h4 className="text-xl font-semibold text-gray-800 mb-3">
                       Enter Your Details
@@ -202,8 +223,8 @@ function Home() {
               </div>
             </div>
             {/* CTA Section */}
-            <div className="bg-gradient-to-r from-primary to-primary/80 py-20 px-4">
-              <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-gradient-to-r from-primary to-primary/80 py-16 md:py-20 px-4 sm:px-6">
+                <div className="max-w-4xl mx-auto text-center px-4 sm:px-0">
                 <h3 className="text-3xl sm:text-4xl font-bold text-white mb-4">
                   Ready to Transform Your Career?
                 </h3>
@@ -242,7 +263,7 @@ function Home() {
                 <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
                   AI-powered resume builder helping professionals land their dream jobs.
                 </p>
-                <div className="border-t border-gray-800 pt-8 text-gray-400">
+                <div className="border-t border-gray-800 pt-8 text-gray-400 px-4 sm:px-0">
                   <p>&copy; 2025 ResMancer. All rights reserved.</p>
                 </div>
               </div>

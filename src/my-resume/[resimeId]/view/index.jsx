@@ -90,26 +90,29 @@ function ViewResume() {
     <ResumeInfoContext.Provider value={{resumeInfo,setResumeInfo}}>
         <div id="no-print">
         <Header/>
-       <div className='my-10 mx-10 md:mx-20 lg:mx-36'>
-        <h2 className='text-center text-2xl font-medium'>Congrats! Your Ultimate AI generated Resume is Ready!</h2>
-        <p className='text-center text-gray-400'>Now you are ready to download your resume and you can share your resume url with anyone</p>
-        <div className='flex justify-between px-44 my-10'>
-            <Button onClick={HandleDownload}>Download</Button>
-<div className="flex justify-end">
-        <AnalysisModal />
-      </div>
-            <RWebShare
-        data={{
-          text: "Hi everyone ,This is my resume please click the url to see it.",
-          url:import.meta.env.VITE_BASE_URL+"my-resume/"+resumeId+"/view",
-          title: resumeInfo?.firstName+" "+resumeInfo?.lastName+" resume" ,
-        }}
-        onClick={() => console.log("shared successfully!")}
-      >
-            <Button>Share</Button>
-            </RWebShare>
-        </div>
-        </div>
+             <div className='my-6 mx-4 sm:mx-6 md:mx-20 lg:mx-36'>
+                <h2 className='text-center text-2xl sm:text-3xl font-medium'>Congrats! Your Ultimate AI generated Resume is Ready!</h2>
+                <p className='text-center text-gray-400 max-w-2xl mx-auto'>Now you are ready to download your resume and you can share your resume url with anyone</p>
+                <div className='flex flex-col sm:flex-row sm:items-center gap-4 justify-between my-6'>
+                    <div className='flex gap-2 justify-center sm:justify-start'>
+                        <Button onClick={HandleDownload}>Download</Button>
+                        <RWebShare
+                            data={{
+                                text: "Hi everyone ,This is my resume please click the url to see it.",
+                                url: import.meta.env.VITE_BASE_URL+"my-resume/"+resumeId+"/view",
+                                title: resumeInfo?.firstName+" "+resumeInfo?.lastName+" resume",
+                            }}
+                            onClick={() => console.log("shared successfully!")}
+                        >
+                            <Button>Share</Button>
+                        </RWebShare>
+                    </div>
+
+                    <div className='flex justify-center sm:justify-end'>
+                        <AnalysisModal />
+                    </div>
+                </div>
+             </div>
        </div>
        <div style={{ margin: 0, padding: 0 }}>
         <div id="print-area" style={{ margin: 0, padding: 0, width: "100%", minHeight: "100vh", background: "white" }}>
