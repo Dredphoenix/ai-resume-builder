@@ -37,7 +37,8 @@ export function detectAgeRequirement(text) {
     /maximum age\s*(\d{1,2})/i,
     /age limit\s*(\d{1,2})(?:\s*-\s*(\d{1,2}))?/i,
     /between\s*(\d{1,2})\s*(?:to|and|-)\s*(\d{1,2})\s*years?/i,
-    /(\d{1,2})\s*[-–]\s*(\d{1,2})\s*years?/i
+    /(\d{1,2})\s*[-–]\s*(\d{1,2})\s*years?/i,
+    /(\d{1,2})\s*(?:to|and)\s*(\d{1,2})\s*years?/i
   ];
 
   for (const re of patterns) {
