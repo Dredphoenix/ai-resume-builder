@@ -31,6 +31,12 @@ function Dashboard() {
       });
   };
 
+  const handleRefreshData = () => {
+    if (user && user.primaryEmailAddress) {
+      GetResumeList(user.primaryEmailAddress.emailAddress);
+    }
+  };
+
   return (
     <div>
       <div className='p-6 sm:p-10 md:px-20 lg:px-32'>
@@ -53,7 +59,7 @@ function Dashboard() {
           <AddResume />
           {resumeList.length > 0 &&
             resumeList.map((resume, index) => (
-              <ResumeCardItem resume={resume} key={index} refreshData={GetResumeList} />
+              <ResumeCardItem resume={resume} key={index} refreshData={handleRefreshData} />
             ))}
         </div>
       </div>
