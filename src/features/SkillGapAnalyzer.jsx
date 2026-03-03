@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { detectAgeRequirement, checkAgeEligibility } from '@/lib/analysisUtils';
@@ -10,13 +10,21 @@ function readTextFile(file) {
     const reader = new FileReader();
     reader.onload = (e) => resolve(String(e.target.result || ''));
     reader.onerror = () => resolve('');
-    // For PDFs, we do not attempt full extraction here — request pasted text instead
     if (file.type === 'application/pdf') {
       reader.readAsText(file);
     } else {
       reader.readAsText(file);
     }
   });
+}
+
+function useLiveClock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return now;
 }
 
 export default function SkillGapAnalyzer() {
@@ -29,6 +37,31 @@ export default function SkillGapAnalyzer() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const now = useLiveClock();
+  const [elapsed, setElapsed] = useState(null);
+  const [finalElapsed, setFinalElapsed] = useState(null);
+  const timerRef = useRef(null);
+  const startRef = useRef(null);
+
+  const [showAgePopup, setShowAgePopup] = useState(false);
+
+  const fmtTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const fmtDate = (d) => d.toLocaleDateString([], { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+  const fmtMs = (ms) => {
+    if (ms == null) return '0.00s';
+    const s = Math.floor(ms / 1000), cs = Math.floor((ms % 1000) / 10);
+    return `${s}.${cs.toString().padStart(2, '0')}s`;
+  };
+
+  // ── ADDED: check age as soon as user leaves the age field ──
+  const handleAgeBlur = () => {
+    if (!age) return;
+    const ageNum = Number(age);
+    if (ageNum < 18 || ageNum > 60) {
+      setShowAgePopup(true);
+    }
+  };
+
   const handleFile = async (f) => {
     setResumeFile(f);
     const text = await readTextFile(f);
@@ -38,12 +71,29 @@ export default function SkillGapAnalyzer() {
   const handleAnalyze = async () => {
     setError('');
     if (!age) return setError('Please enter your age');
+
+    const ageNum = Number(age);
+    if (ageNum < 18 || ageNum > 60) {
+      setShowAgePopup(true);
+      return;
+    }
+
     if (!resumeText && !resumeFile) return setError('Upload or paste your resume text');
     if (!jobText) return setError('Paste the job requirement summary');
+
+    setFinalElapsed(null);
+    startRef.current = Date.now();
+    setElapsed(0);
+    timerRef.current = setInterval(() => setElapsed(Date.now() - startRef.current), 50);
 
     setLoading(true);
     try {
       const aiResp = await analyzeSkillGap(resumeText, jobText);
+
+      clearInterval(timerRef.current);
+      setFinalElapsed(Date.now() - startRef.current);
+      setElapsed(null);
+
       if (!aiResp || aiResp.error) {
         return setError(aiResp?.error || 'AI analysis failed');
       }
@@ -58,6 +108,9 @@ export default function SkillGapAnalyzer() {
 
       setResult({ ...aiResp, matchPercentage, eligibility, ageDetected, ageCheck });
     } catch (err) {
+      clearInterval(timerRef.current);
+      setFinalElapsed(Date.now() - startRef.current);
+      setElapsed(null);
       setError('Analysis failed: ' + String(err));
     } finally {
       setLoading(false);
@@ -65,13 +118,43 @@ export default function SkillGapAnalyzer() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-6 pb-14">
+
+      {showAgePopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl shadow-xl p-8 max-w-sm w-full text-center">
+            <div className="text-5xl mb-4">🚫</div>
+            <h3 className="text-xl font-bold text-red-600 mb-2">Not Eligible</h3>
+            <p className="text-gray-600 mb-6">
+              You are not eligible to use this tool.<br />
+              Age must be between <strong>18 and 60</strong> years.
+            </p>
+            <Button
+              className="w-full"
+              onClick={() => {
+                setShowAgePopup(false);
+                navigate('/');
+              }}
+            >
+              Go to Home
+            </Button>
+          </div>
+        </div>
+      )}
+
       <h2 className="text-2xl font-bold mb-4">Skill Gap Analyzer</h2>
       <p className="text-sm text-gray-600 mb-4">Enter your age, upload or paste your resume, paste the job requirement, and click Analyze.</p>
 
       <div className="grid gap-3">
         <label className="text-sm font-bold">Your Age (required)</label>
-        <input type="number" value={age} onChange={e=>setAge(e.target.value)} className="input border-2 border-gray-400 rounded p-2" />
+        {/* ── MODIFIED: added onBlur ── */}
+        <input
+          type="number"
+          value={age}
+          onChange={e => setAge(e.target.value)}
+          onBlur={handleAgeBlur}
+          className="input border-2 border-gray-400 rounded p-2"
+        />
 
         <label className="text-sm">Resume Upload (PDF or text)</label>
         <input type="file" accept=".pdf,text/plain,application/pdf" onChange={e=>handleFile(e.target.files[0])} className='border-2 border-gray-400 rounded p-2' />
@@ -83,6 +166,17 @@ export default function SkillGapAnalyzer() {
         <textarea rows={6} value={jobText} onChange={e=>setJobText(e.target.value)} className="textarea border-2 border-gray-400 rounded p-1" />
 
         {error && <div className="text-red-500">{error}</div>}
+
+        {(elapsed !== null || finalElapsed !== null) && (
+          <div className={`flex items-center gap-2 text-sm font-mono px-3 py-1.5 rounded w-fit border
+            ${elapsed !== null ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-green-50 border-green-200 text-green-700'}`}>
+            {elapsed !== null ? (
+              <><span className="animate-pulse">⏱</span> Analyzing… {fmtMs(elapsed)}</>
+            ) : (
+              <><span>✓</span> Done in {fmtMs(finalElapsed)}</>
+            )}
+          </div>
+        )}
 
         <div className="flex gap-2">
           <Button onClick={handleAnalyze} disabled={loading}>{loading ? 'Analyzing...' : 'Analyze'}</Button>
@@ -134,6 +228,12 @@ export default function SkillGapAnalyzer() {
           )}
         </div>
       )}
+
+      <div className="fixed bottom-0 left-0 right-0 flex justify-between px-6 py-2
+                      bg-gray-50 border-t border-gray-200 text-xs text-gray-500 font-mono z-50">
+        <span>{fmtDate(now)}</span>
+        <span>{fmtTime(now)}</span>
+      </div>
     </div>
   );
 }
